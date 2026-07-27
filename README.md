@@ -96,3 +96,12 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+GET /saved-routes 요청 흐름
+
+1. Controller가 URL과 HTTP Method를 보고 요청을 받는다.
+2. Controller는 직접 처리하지 않고 Service를 호출한다.
+3. Service는 Repository에서 목록을 받아 누적 절약 금액을 계산한다.
+4. Repository는 현재 배열에서 데이터를 조회한다.
+5. Service가 목록과 총합을 객체로 만들어 반환한다.
+6. NestJS가 반환 객체를 JSON으로 변환해 클라이언트에 응답한다.
