@@ -106,3 +106,10 @@ GET /saved-routes 요청 흐름
 4. Repository는 현재 배열에서 데이터를 조회한다.
 5. Service가 목록과 총합을 객체로 만들어 반환한다.
 6. NestJS가 반환 객체를 JSON으로 변환해 클라이언트에 응답한다.
+
+GET /saved-routes/1
+@Param과 ParseIntPipe는 Controller 진입 값을 다룬다.
+
+Repository는 데이터 존재 여부를 조회만 한다.
+
+Service는 데이터가 없을 때 404로 처리한다.
