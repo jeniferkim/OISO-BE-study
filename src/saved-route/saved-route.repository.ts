@@ -32,4 +32,10 @@ export class SavedRouteRepository {
     // Prisma 붙으면 아래처럼
     // return this.prisma.savedRoute.findMany();
   }
+
+  // ID 조회 메서드 추가
+  // 찾으면 SavedRoute 반환. 없으면 undefined 반환
+  findById(id: number): SavedRoute | undefined {
+    return this.savedRoutes.find((savedRoute) => savedRoute.id === id);
+  }
 }

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { SavedRouteRepository } from './saved-route.repository';
-import type { SavedRouteListResponse } from './saved-route.type';
+import type { SavedRoute, SavedRouteListResponse } from './saved-route.type';
 
 @Injectable()
 export class SavedRouteService {
@@ -22,5 +22,17 @@ export class SavedRouteService {
       savedRoutes,
       totalSavingAmount,
     };
+  }
+
+  // 상세 조회 기능 추가
+  // 레포에서 ID로 조회 -> 없으면 404, 있으면 데이터 반환
+  findOne(id: number): SavedRoute {
+    const savedRoute = this.savedRouteRepository.findById(id);
+
+    if (!savedRoute) {
+      throw new NotFoundException('저장 루트를 찾을 수 없습니다.'); // 404
+    }
+
+    return savedRoute; // 데이터 반환
   }
 }
