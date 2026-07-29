@@ -38,4 +38,18 @@ export class SavedRouteRepository {
   findById(id: number): SavedRoute | undefined {
     return this.savedRoutes.find((savedRoute) => savedRoute.id === id);
   }
+
+  // 새 데이터를 만듦 -> 배열에 저장 -> 저장된 결과를 반환
+  create(title: string, savingAmount: number): SavedRoute {
+    const savedRoute: SavedRoute = {
+      id: this.savedRoutes.length + 1,
+      title,
+      savingAmount,
+      savedAt: new Date().toISOString(),
+    };
+
+    this.savedRoutes.push(savedRoute);
+
+    return savedRoute;
+  }
 }
