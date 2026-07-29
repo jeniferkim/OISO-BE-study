@@ -27,3 +27,8 @@ export interface SavedRouteListResponse {
   savedRoutes: SavedRoute[];
   totalSavingAmount: number;
 }
+
+// 삭제된 전체 객체 대신 메시지만 반환
+export interface DeleteSavedRouteResponse {
+  message: string;
+}
