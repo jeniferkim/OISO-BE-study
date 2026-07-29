@@ -1,0 +1,18 @@
+# 컨테이너 실행 구조. 깃허브에 올림
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: oiso-study-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER} # DB 사용자 이름
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # DB 비번
+      POSTGRES_DB: ${POSTGRES_DB} # 처음 생성할 DB 이름
+    ports:
+      - '5432:5432' # 내 컴의 5432 포트와 컨테이너의 5432 포트를 연결
+    volumes: # 컨테이너를 껐다 켜도 DB 데이터를 유지
+      - oiso_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  oiso_postgres_data:
