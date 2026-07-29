@@ -53,4 +53,17 @@ export class SavedRouteRepository {
 
     return savedRoute;
   }
+
+  // 어떤 배열에서, 어떤 데이터를, 어떤 방법으로 제거할지 만 담당
+  deleteById(id: number): void {
+    const savedRouteIndex = this.savedRoutes.findIndex(
+      (savedRoute) => savedRoute.id === id,
+    );
+
+    if (savedRouteIndex === -1) {
+      return;
+    }
+
+    this.savedRoutes.splice(savedRouteIndex, 1);
+  }
 }
