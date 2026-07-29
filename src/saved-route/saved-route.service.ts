@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { SavedRouteRepository } from './saved-route.repository';
-import type { SavedRoute, SavedRouteListResponse } from './saved-route.type';
+import type {
+  DeleteSavedRouteResponse,
+  SavedRoute,
+  SavedRouteListResponse,
+} from './saved-route.type';
 
 import { CreateSavedRouteDto } from './dto/create-saved-route.dto';
 
@@ -45,5 +49,23 @@ export class SavedRouteService {
       createSavedRouteDto.title,
       createSavedRouteDto.savingAmount,
     );
+  }
+
+  remove(id: number): DeleteSavedRouteResponse {
+    // 1. 삭제 데이터가 존재하는지 확인
+    const savedRoute = this.savedRouteRepository.findById(id);
+
+    // 2. 없으면 404 = 서비스의 정책!
+    if (!savedRoute) {
+      throw new NotFoundException('저장 루트를 찾을 수 없습니다.');
+    }
+
+    // 3. 있으면 Repository에 삭제 요청
+    this.savedRouteRepository.deleteById(id);
+
+    // 4. 있으면 메시지 반환
+    return {
+      message: '저장 루트가 삭제되었습니다.',
+    };
   }
 }
