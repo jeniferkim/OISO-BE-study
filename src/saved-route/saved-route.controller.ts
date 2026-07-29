@@ -1,7 +1,16 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 
 import { SavedRouteService } from './saved-route.service';
 import type { SavedRoute, SavedRouteListResponse } from './saved-route.type';
+
+import { CreateSavedRouteDto } from './dto/create-saved-route.dto';
 
 // URL이 만들어지는 방식
 // 기본 경로를 만듦
@@ -21,5 +30,11 @@ export class SavedRouteController {
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): SavedRoute {
     return this.savedRouteService.findOne(id);
+  }
+
+  @Post()
+  // @Body는 요청 JSON 본문을 꺼내 JSON으로 전달
+  create(@Body() createSavedRouteDto: CreateSavedRouteDto): SavedRoute {
+    return this.savedRouteService.create(createSavedRouteDto);
   }
 }
