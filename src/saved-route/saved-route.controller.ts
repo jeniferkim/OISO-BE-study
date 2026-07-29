@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -8,7 +9,11 @@ import {
 } from '@nestjs/common';
 
 import { SavedRouteService } from './saved-route.service';
-import type { SavedRoute, SavedRouteListResponse } from './saved-route.type';
+import type {
+  DeleteSavedRouteResponse,
+  SavedRoute,
+  SavedRouteListResponse,
+} from './saved-route.type';
 
 import { CreateSavedRouteDto } from './dto/create-saved-route.dto';
 
@@ -36,5 +41,10 @@ export class SavedRouteController {
   // @Body는 요청 JSON 본문을 꺼내 JSON으로 전달
   create(@Body() createSavedRouteDto: CreateSavedRouteDto): SavedRoute {
     return this.savedRouteService.create(createSavedRouteDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number): DeleteSavedRouteResponse {
+    return this.savedRouteService.remove(id);
   }
 }
