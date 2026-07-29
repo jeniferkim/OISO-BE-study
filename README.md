@@ -96,3 +96,51 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+### 0727
+
+**GET /saved-routes 요청 흐름**
+
+1. Controller가 URL과 HTTP Method를 보고 요청을 받는다.
+2. Controller는 직접 처리하지 않고 Service를 호출한다.
+3. Service는 Repository에서 목록을 받아 누적 절약 금액을 계산한다.
+4. Repository는 현재 배열에서 데이터를 조회한다.
+5. Service가 목록과 총합을 객체로 만들어 반환한다.
+6. NestJS가 반환 객체를 JSON으로 변환해 클라이언트에 응답한다.
+
+**GET /saved-routes/1**
+@Param과 ParseIntPipe는 Controller 진입 값을 다룬다.
+
+Repository는 데이터 존재 여부를 조회만 한다.
+
+Service는 데이터가 없을 때 404로 처리한다.
+
+### 0729
+
+TypeScript 타입
+개발 중 코드의 타입을 검사함
+
+DTO
+외부에서 들어오는 요청 데이터의 형태를 표현함
+
+class-validator
+실제 런타임 요청값을 검사함
+
+ValidationPipe
+DTO 검증을 NestJS 요청 흐름에 적용함
+
+Service
+생성 규칙과 처리 순서를 담당함
+
+Repository
+실제 데이터 저장 방법을 담당함
+
+**DELETE /saved-routes/1**
+
+→ ParseIntPipe
+→ Controller.remove(1)
+→ Service.remove(1)
+→ Repository.findById(1)
+→ 존재 여부 판단
+→ Repository.deleteById(1)
+→ 성공 응답 반환
