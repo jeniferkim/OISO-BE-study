@@ -40,6 +40,7 @@ export class SavedRouteRepository {
   }
 
   // 새 데이터를 만듦 -> 배열에 저장 -> 저장된 결과를 반환
+  // 실제 데이터 저장
   create(title: string, savingAmount: number): SavedRoute {
     const savedRoute: SavedRoute = {
       id: this.savedRoutes.length + 1,

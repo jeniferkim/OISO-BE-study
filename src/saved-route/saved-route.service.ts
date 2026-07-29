@@ -3,6 +3,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { SavedRouteRepository } from './saved-route.repository';
 import type { SavedRoute, SavedRouteListResponse } from './saved-route.type';
 
+import { CreateSavedRouteDto } from './dto/create-saved-route.dto';
+
 @Injectable()
 export class SavedRouteService {
   constructor(private readonly savedRouteRepository: SavedRouteRepository) {}
@@ -34,5 +36,14 @@ export class SavedRouteService {
     }
 
     return savedRoute; // 데이터 반환
+  }
+
+  // 생성 기능 수행
+  // 현재는 단순 전달
+  create(createSavedRouteDto: CreateSavedRouteDto): SavedRoute {
+    return this.savedRouteRepository.create(
+      createSavedRouteDto.title,
+      createSavedRouteDto.savingAmount,
+    );
   }
 }
