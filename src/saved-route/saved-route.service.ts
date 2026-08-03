@@ -30,6 +30,25 @@ export class SavedRouteService {
     };
   }
 
+  async findAllByUserId(userId: number): Promise<SavedRouteListResponse> {
+    const savedRouteRecords =
+      await this.savedRouteRepository.findAllByUserId(userId);
+
+    const savedRoutes = savedRouteRecords.map((record) =>
+      this.toResponse(record),
+    );
+
+    const totalSavingAmount = savedRoutes.reduce(
+      (total, route) => total + route.savingAmount,
+      0,
+    );
+
+    return {
+      savedRoutes,
+      totalSavingAmount,
+    };
+  }
+
   async findOne(id: number): Promise<SavedRoute> {
     const savedRoute = await this.savedRouteRepository.findById(id);
 
@@ -44,6 +63,7 @@ export class SavedRouteService {
     const savedRoute = await this.savedRouteRepository.create(
       createSavedRouteDto.title,
       createSavedRouteDto.savingAmount,
+      createSavedRouteDto.userId,
     );
 
     return this.toResponse(savedRoute);
