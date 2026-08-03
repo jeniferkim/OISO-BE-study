@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { CreateSavedRouteDto } from './dto/create-saved-route.dto';
@@ -21,8 +22,10 @@ export class SavedRouteController {
   constructor(private readonly savedRouteService: SavedRouteService) {}
 
   @Get()
-  findAll(): Promise<SavedRouteListResponse> {
-    return this.savedRouteService.findAll();
+  findAll(
+    @Query('userId', ParseIntPipe) userId: number,
+  ): Promise<SavedRouteListResponse> {
+    return this.savedRouteService.findAllByUserId(userId);
   }
 
   @Get(':id')

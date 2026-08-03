@@ -22,17 +22,33 @@ export class SavedRouteRepository {
     });
   }
 
+  findAllByUserId(userId: number) {
+    return this.prisma.savedRoute.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        savedAt: 'desc',
+      },
+    });
+  }
+
   findById(id: number): Promise<PrismaSavedRoute | null> {
     return this.prisma.savedRoute.findUnique({
       where: { id },
     });
   }
 
-  create(title: string, savingAmount: number): Promise<PrismaSavedRoute> {
+  create(
+    title: string,
+    savingAmount: number,
+    userId: number,
+  ): Promise<PrismaSavedRoute> {
     return this.prisma.savedRoute.create({
       data: {
         title,
         savingAmount,
+        userId,
       },
     });
   }
