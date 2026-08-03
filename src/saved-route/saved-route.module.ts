@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { PrismaModule } from 'prisma/prisma.module';
 import { SavedRouteController } from './saved-route.controller';
 import { SavedRouteRepository } from './saved-route.repository';
 import { SavedRouteService } from './saved-route.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],
