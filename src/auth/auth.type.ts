@@ -14,3 +14,9 @@ export interface AuthUser {
   userId: number;
   email: string;
 }
+
+// 인증 타입 공통화
+// Guard를 통과한 Controller에서 사용
+export interface AuthenticatedRequest extends Request {
+  user: AuthUser;
+}

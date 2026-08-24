@@ -4,9 +4,10 @@ import { SavedRouteController } from './saved-route.controller';
 import { SavedRouteRepository } from './saved-route.repository';
 import { SavedRouteService } from './saved-route.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, AuthModule],
   // HTTP 요청을 받을 컨트롤러 등록
   // 컨트롤러에 서비스 주입
   controllers: [SavedRouteController],

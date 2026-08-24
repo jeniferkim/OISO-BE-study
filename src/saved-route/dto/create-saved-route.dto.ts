@@ -11,9 +11,10 @@ export class CreateSavedRouteDto {
   @Min(0) // 0 이상이어야 함
   savingAmount!: number;
 
-  @IsInt()
-  @Min(1)
-  userId!: number;
+  // DTO는 클라이언트가 보내야 하는 값만 정의함
+  // @IsInt()
+  // @Min(1)
+  // userId!: number;
 }
 
 // ! 는 이 필드는 지금 초기화 코드는 안 보이지만, 실제 사용 시점에는 값이 들어온다고 TS에 알려주는 표시
