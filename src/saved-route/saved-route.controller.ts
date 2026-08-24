@@ -33,6 +33,7 @@ import {
 } from '@nestjs/swagger';
 import { SavedRouteListResponseDto } from './dto/saved-route-list-response.dto';
 import { SavedRouteResponseDto } from './dto/saved-route-response.dto';
+import { ErrorResponseDto } from 'src/common/dto/error-response.dto';
 
 @ApiTags('Saved Routes') // 스웨거에서 API를 그룹으로 묶음
 @ApiBearerAuth() // 이 컨트롤러 API들이 Bearer JWT 인증을 사용한다는 걸 문서에 표시
@@ -112,6 +113,7 @@ export class SavedRouteController {
     description: '다른 사용자의 저장 루트',
   })
   @ApiNotFoundResponse({
+    type: ErrorResponseDto,
     description: '저장 루트가 존재하지 않음',
   })
   remove(

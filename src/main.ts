@@ -3,6 +3,8 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
 
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -16,6 +18,8 @@ async function bootstrap() {
       transform: true, // 요청값을 DTO 타입이나 파라미터 타입에 맞게 변환하는 기능을 활성화
     }),
   );
+
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // 스웨거 문서 전체의 기본 설정을 만드는 객체
   const swaggerConfig = new DocumentBuilder()
