@@ -13,6 +13,12 @@ interface AuthenticatedRequest extends Request {
   user?: AuthUser;
 }
 
+// 가드 내부에서는 인증 전까지 user가 없을 수 있음. 선택값 타입을 별도로
+// Guard가 토큰을 검증하는 도중 사용
+export interface RequestWithOptionalUser extends Request {
+  user?: AuthUser;
+}
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}

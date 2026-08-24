@@ -39,6 +39,15 @@ export class SavedRouteRepository {
     });
   }
 
+  findByIdAndUserId(id: number, userId: number) {
+    return this.prisma.savedRoute.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
+  }
+
   create(
     title: string,
     savingAmount: number,

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { CreateSavedRouteDto } from './dto/create-saved-route.dto';
 import { SavedRouteRepository } from './saved-route.repository';
@@ -49,8 +53,11 @@ export class SavedRouteService {
     };
   }
 
-  async findOne(id: number): Promise<SavedRoute> {
-    const savedRoute = await this.savedRouteRepository.findById(id);
+  async findOne(userId: number, savedRouteId: number): Promise<SavedRoute> {
+    const savedRoute = await this.savedRouteRepository.findByIdAndUserId(
+      savedRouteId,
+      userId,
+    );
 
     if (!savedRoute) {
       throw new NotFoundException('저장 루트를 찾을 수 없습니다.');
@@ -59,24 +66,34 @@ export class SavedRouteService {
     return this.toResponse(savedRoute);
   }
 
-  async create(createSavedRouteDto: CreateSavedRouteDto): Promise<SavedRoute> {
+  async create(
+    userId: number,
+    createSavedRouteDto: CreateSavedRouteDto,
+  ): Promise<SavedRoute> {
     const savedRoute = await this.savedRouteRepository.create(
       createSavedRouteDto.title,
       createSavedRouteDto.savingAmount,
-      createSavedRouteDto.userId,
+      userId,
     );
 
     return this.toResponse(savedRoute);
   }
 
-  async remove(id: number): Promise<DeleteSavedRouteResponse> {
-    const savedRoute = await this.savedRouteRepository.findById(id);
+  async remove(
+    userId: number,
+    savedRouteId: number,
+  ): Promise<DeleteSavedRouteResponse> {
+    const savedRoute = await this.savedRouteRepository.findById(savedRouteId);
 
     if (!savedRoute) {
       throw new NotFoundException('저장 루트를 찾을 수 없습니다.');
     }
 
-    await this.savedRouteRepository.deleteById(id);
+    if (savedRoute.userId !== userId) {
+      throw new ForbiddenException('해당 저장 루트를 삭제할 권한이 없습니다.');
+    }
+
+    await this.savedRouteRepository.deleteById(savedRouteId);
 
     return {
       message: '저장 루트가 삭제되었습니다.',
