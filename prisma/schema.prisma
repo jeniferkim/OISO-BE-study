@@ -20,6 +20,7 @@ model User {
   id          Int          @id @default(autoincrement())
   name        String
   email       String       @unique
+  savedRouteCount Int          @default(0)
   savedRoutes SavedRoute[]
   // 사용자 한 명에게 저장 루트 여러 개 있을 수 있다는 뜻
   // 관계를 표현하기 위한 Prisma 필드. 별도 컬럼으로 저장 X
