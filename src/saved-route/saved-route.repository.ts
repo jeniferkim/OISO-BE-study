@@ -5,7 +5,9 @@
  */
 
 import { Injectable } from '@nestjs/common';
+
 import type { Prisma, SavedRoute as PrismaSavedRoute } from '@prisma/client';
+
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()

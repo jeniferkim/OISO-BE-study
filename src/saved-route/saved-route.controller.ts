@@ -34,7 +34,8 @@ import {
 } from '@nestjs/swagger';
 import { SavedRouteListResponseDto } from './dto/saved-route-list-response.dto';
 import { SavedRouteResponseDto } from './dto/saved-route-response.dto';
-import { ErrorResponseDto } from 'src/common/dto/error-response.dto';
+
+import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import { GetSavedRoutesQueryDto } from './dto/get-saved-routes-query.dto';
 
 @ApiTags('Saved Routes') // 스웨거에서 API를 그룹으로 묶음
