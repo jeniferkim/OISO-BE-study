@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -33,7 +34,9 @@ import {
 } from '@nestjs/swagger';
 import { SavedRouteListResponseDto } from './dto/saved-route-list-response.dto';
 import { SavedRouteResponseDto } from './dto/saved-route-response.dto';
+
 import { ErrorResponseDto } from '../common/dto/error-response.dto';
+import { GetSavedRoutesQueryDto } from './dto/get-saved-routes-query.dto';
 
 @ApiTags('Saved Routes') // 스웨거에서 API를 그룹으로 묶음
 @ApiBearerAuth() // 이 컨트롤러 API들이 Bearer JWT 인증을 사용한다는 걸 문서에 표시
@@ -53,8 +56,9 @@ export class SavedRouteController {
   })
   findAll(
     @Req() request: AuthenticatedRequest,
+    @Query() query: GetSavedRoutesQueryDto,
   ): Promise<SavedRouteListResponse> {
-    return this.savedRouteService.findAllByUserId(request.user.userId);
+    return this.savedRouteService.findAllByUserId(request.user.userId, query);
   }
 
   @Get(':id')

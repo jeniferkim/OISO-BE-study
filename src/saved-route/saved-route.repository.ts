@@ -5,7 +5,9 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import type { SavedRoute as PrismaSavedRoute } from '@prisma/client';
+
+import type { Prisma, SavedRoute as PrismaSavedRoute } from '@prisma/client';
+
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -22,14 +24,21 @@ export class SavedRouteRepository {
     });
   }
 
-  findAllByUserId(userId: number) {
+  findAllByUserId(
+    userId: number,
+    skip: number,
+    take: number,
+    orderBy: Prisma.SavedRouteOrderByWithRelationInput,
+    keyword?: string,
+    minSavingAmount?: number,
+  ) {
+    const where = this.buildWhere(userId, keyword, minSavingAmount);
+
     return this.prisma.savedRoute.findMany({
-      where: {
-        userId,
-      },
-      orderBy: {
-        savedAt: 'desc',
-      },
+      where,
+      skip,
+      take,
+      orderBy,
     });
   }
 
@@ -46,6 +55,55 @@ export class SavedRouteRepository {
         userId,
       },
     });
+  }
+
+  // 저장 루트가 총 몇 개? 페이지네이션용
+  countByUserId(
+    userId: number,
+    keyword?: string,
+    minSavingAmount?: number,
+  ): Promise<number> {
+    const where = this.buildWhere(userId, keyword, minSavingAmount);
+
+    return this.prisma.savedRoute.count({
+      where,
+    });
+  }
+  // 전체 절약 금액 합계 totalSavingAmount용
+  async sumSavingAmountByUserId(userId: number): Promise<number> {
+    const result = await this.prisma.savedRoute.aggregate({
+      where: {
+        userId,
+      },
+      _sum: {
+        savingAmount: true,
+      },
+    });
+
+    return result._sum.savingAmount ?? 0;
+  }
+
+  private buildWhere(
+    userId: number,
+    keyword?: string,
+    minSavingAmount?: number,
+  ): Prisma.SavedRouteWhereInput {
+    return {
+      userId,
+
+      ...(keyword && {
+        title: {
+          contains: keyword,
+          mode: 'insensitive',
+        },
+      }),
+
+      ...(minSavingAmount !== undefined && {
+        savingAmount: {
+          gte: minSavingAmount,
+        },
+      }),
+    };
   }
 
   create(

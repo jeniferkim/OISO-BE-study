@@ -26,6 +26,14 @@ export interface SavedRouteListResponse {
   // API 전체 응답의 형태
   savedRoutes: SavedRoute[];
   totalSavingAmount: number;
+
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+    hasNext: boolean;
+  };
 }
 
 // 삭제된 전체 객체 대신 메시지만 반환

@@ -12,6 +12,7 @@ import type {
   SavedRoute,
   SavedRouteListResponse,
 } from './saved-route.type';
+import { GetSavedRoutesQueryDto } from './dto/get-saved-routes-query.dto';
 
 @Injectable()
 export class SavedRouteService {
@@ -20,40 +21,77 @@ export class SavedRouteService {
     private readonly prisma: PrismaService,
   ) {}
 
-  async findAll(): Promise<SavedRouteListResponse> {
-    const savedRouteRecords = await this.savedRouteRepository.findAll();
+  // async findAll(): Promise<SavedRouteListResponse> {
+  // const savedRouteRecords = await this.savedRouteRepository.findAll();
+
+  // const savedRoutes = savedRouteRecords.map((record) =>
+  // this.toResponse(record),
+  // );
+
+  // const totalSavingAmount = savedRoutes.reduce(
+  // (total, route) => total + route.savingAmount,
+  // 0,
+  // );
+
+  // return {
+  // savedRoutes,
+  // totalSavingAmount,
+  // };
+  // }
+
+  async findAllByUserId(
+    userId: number,
+    query: GetSavedRoutesQueryDto,
+  ): Promise<SavedRouteListResponse> {
+    const { page, limit, sort, keyword, minSavingAmount } = query;
+
+    const skip = (page - 1) * limit;
+
+    const orderBy =
+      sort === 'oldest'
+        ? { savedAt: 'asc' as const }
+        : sort === 'savingAmountDesc'
+          ? { savingAmount: 'desc' as const }
+          : { savedAt: 'desc' as const };
+
+    // 다음 단계에서 Repository에
+    // skip, limit, sort를 넘길 예정
+
+    const [savedRouteRecords, totalCount, totalSavingAmount] =
+      await Promise.all([
+        this.savedRouteRepository.findAllByUserId(
+          userId,
+          skip,
+          limit,
+          orderBy,
+          keyword,
+          minSavingAmount,
+        ),
+        this.savedRouteRepository.countByUserId(
+          userId,
+          keyword,
+          minSavingAmount,
+        ),
+        this.savedRouteRepository.sumSavingAmountByUserId(userId),
+      ]);
 
     const savedRoutes = savedRouteRecords.map((record) =>
       this.toResponse(record),
     );
 
-    const totalSavingAmount = savedRoutes.reduce(
-      (total, route) => total + route.savingAmount,
-      0,
-    );
+    const totalPages = Math.ceil(totalCount / limit);
+    const hasNext = page < totalPages;
 
     return {
       savedRoutes,
       totalSavingAmount,
-    };
-  }
-
-  async findAllByUserId(userId: number): Promise<SavedRouteListResponse> {
-    const savedRouteRecords =
-      await this.savedRouteRepository.findAllByUserId(userId);
-
-    const savedRoutes = savedRouteRecords.map((record) =>
-      this.toResponse(record),
-    );
-
-    const totalSavingAmount = savedRoutes.reduce(
-      (total, route) => total + route.savingAmount,
-      0,
-    );
-
-    return {
-      savedRoutes,
-      totalSavingAmount,
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        hasNext,
+      },
     };
   }
 
