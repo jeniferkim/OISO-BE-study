@@ -13,6 +13,7 @@ import type {
   SavedRouteListResponse,
 } from './saved-route.type';
 import { GetSavedRoutesQueryDto } from './dto/get-saved-routes-query.dto';
+import { ErrorCode } from 'src/common/errors/error-code';
 
 @Injectable()
 export class SavedRouteService {
@@ -102,7 +103,10 @@ export class SavedRouteService {
     );
 
     if (!savedRoute) {
-      throw new NotFoundException('저장 루트를 찾을 수 없습니다.');
+      throw new NotFoundException({
+        code: ErrorCode.SAVED_ROUTE_NOT_FOUND,
+        message: '저장 루트를 찾을 수 없습니다.',
+      });
     }
 
     return this.toResponse(savedRoute);
@@ -146,11 +150,17 @@ export class SavedRouteService {
     const savedRoute = await this.savedRouteRepository.findById(savedRouteId);
 
     if (!savedRoute) {
-      throw new NotFoundException('저장 루트를 찾을 수 없습니다.');
+      throw new NotFoundException({
+        code: ErrorCode.SAVED_ROUTE_NOT_FOUND,
+        message: '저장 루트를 찾을 수 없습니다.',
+      });
     }
 
     if (savedRoute.userId !== userId) {
-      throw new ForbiddenException('해당 저장 루트를 삭제할 권한이 없습니다.');
+      throw new ForbiddenException({
+        code: ErrorCode.SAVED_ROUTE_FORBIDDEN,
+        message: '해당 저장 루트를 삭제할 권한이 없습니다.',
+      });
     }
 
     await this.savedRouteRepository.deleteById(savedRouteId);

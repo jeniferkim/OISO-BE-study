@@ -117,7 +117,7 @@ export class SavedRouteController {
   })
   @ApiNotFoundResponse({
     type: ErrorResponseDto,
-    description: '저장 루트가 존재하지 않음',
+    description: '저장 루트가 존재하지 않음 (SAVED_ROUTE_NOT_FOUND)',
   })
   remove(
     @Req() request: AuthenticatedRequest,
