@@ -24,4 +24,20 @@ export class UserRepository {
       },
     });
   }
+
+  // User + SavedRoute 조회
+  findWithSavedRoutes(id: number) {
+    return this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        savedRoutes: {
+          orderBy: {
+            savedAt: 'desc', // 관계 데이터에도 정렬 가능
+          },
+        },
+      },
+    });
+  }
 }
