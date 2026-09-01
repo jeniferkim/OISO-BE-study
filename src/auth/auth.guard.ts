@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
 
 import type { AuthUser, JwtPayload } from './auth.type';
+import { ErrorCode } from 'src/common/errors/error-code';
 
 interface AuthenticatedRequest extends Request {
   user?: AuthUser;
@@ -29,7 +30,10 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException('인증 토큰이 필요합니다.');
+      throw new UnauthorizedException({
+        code: ErrorCode.AUTH_TOKEN_REQUIRED,
+        message: '인증 토큰이 필요합니다.',
+      });
     }
 
     try {
@@ -40,7 +44,10 @@ export class AuthGuard implements CanActivate {
         email: payload.email,
       };
     } catch {
-      throw new UnauthorizedException('유효하지 않거나 만료된 토큰입니다.');
+      throw new UnauthorizedException({
+        code: ErrorCode.INVALID_ACCESS_TOKEN,
+        message: '유효하지 않거나 만료된 토큰입니다.',
+      });
     }
 
     return true;

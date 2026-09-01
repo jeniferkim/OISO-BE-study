@@ -7,6 +7,11 @@ export class ErrorResponseDto {
   statusCode!: number;
 
   @ApiProperty({
+    example: 'SAVED_ROUTE_NOT_FOUND',
+  })
+  code!: string;
+
+  @ApiProperty({
     example: '저장 루트를 찾을 수 없습니다.',
   })
   message!: string | string[];
